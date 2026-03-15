@@ -27,3 +27,19 @@ export async function submitOrder(formData) {
   if (error) throw error;
   return data[0];
 }
+export async function getAllOrders() {
+  const { data, error } = await supabase
+    .from('orders')
+    .select('*, users(email, telegram)')
+    .order('created_at', { ascending: false });
+  if (error) throw error;
+  return data;
+}
+
+export async function updateOrderStatus(orderId, newStatus) {
+  const { error } = await supabase
+    .from('orders')
+    .update({ order_status: newStatus })
+    .eq('id', orderId);
+  if (error) throw error;
+}
