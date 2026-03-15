@@ -1,0 +1,40 @@
+<form id="orderForm" class="max-w-2xl mx-auto bg-gray-800 p-8 rounded-xl space-y-4">
+  <input type="text" name="projectName" placeholder="Project Name" required class="w-full bg-gray-700 p-3 rounded">
+  <select name="blockchain" class="w-full bg-gray-700 p-3 rounded">
+    <option>Ethereum</option>
+    <option>Polygon</option>
+    <option>BSC</option>
+  </select>
+  <input type="text" name="websiteType" placeholder="Website Type (e.g., Token, NFT)" class="w-full bg-gray-700 p-3 rounded">
+  <input type="number" name="pages" placeholder="Number of Pages" class="w-full bg-gray-700 p-3 rounded">
+  <input type="text" name="tokenName" placeholder="Token Name (if any)" class="w-full bg-gray-700 p-3 rounded">
+  <input type="text" name="tokenSupply" placeholder="Token Supply" class="w-full bg-gray-700 p-3 rounded">
+  <textarea name="description" placeholder="Project Description" rows="4" class="w-full bg-gray-700 p-3 rounded"></textarea>
+  <input type="date" name="deadline" class="w-full bg-gray-700 p-3 rounded">
+  <input type="text" name="budget" placeholder="Budget in ETH" class="w-full bg-gray-700 p-3 rounded">
+  <input type="email" name="email" placeholder="Your Email" required class="w-full bg-gray-700 p-3 rounded">
+  <input type="text" name="telegram" placeholder="Telegram / Discord" class="w-full bg-gray-700 p-3 rounded">
+  <button type="submit" class="w-full bg-purple-600 py-3 rounded-lg font-semibold hover:bg-purple-700">Submit Order</button>
+</form>
+<script type="module">
+  import { submitOrder } from './js/orders.js';
+  import { getWallet } from './js/wallet.js';
+
+  document.getElementById('orderForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const wallet = getWallet();
+    if (!wallet) {
+      alert('Please connect your wallet first.');
+      return;
+    }
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
+    try {
+      const order = await submitOrder(data);
+      alert('Order submitted! Please complete payment.');
+      window.location.href = `dashboard.html?order=${order.id}`;
+    } catch (err) {
+      alert('Error: ' + err.message);
+    }
+  });
+</script>
